@@ -1,0 +1,46 @@
+# Trading Bot Configuration
+
+# Trading mode: "paper" (simulated) or "live" (real money, requires broker API)
+mode: paper
+
+# Symbols to trade
+symbols:
+  - AAPL
+  - MSFT
+  - TSLA
+  - SPY
+
+# Active strategy: "moving_average" or "rsi"
+strategy: moving_average
+
+# Strategy parameters
+strategies:
+  moving_average:
+    short_window: 20   # Short-term MA period
+    long_window: 50    # Long-term MA period
+
+  rsi:
+    period: 14         # RSI calculation period
+    oversold: 30       # Buy signal threshold
+    overbought: 70     # Sell signal threshold
+
+# Risk management
+risk:
+  max_position_pct: 0.10   # Max % of portfolio per position (10%)
+  stop_loss_pct: 0.05      # Stop-loss at 5% below entry
+  take_profit_pct: 0.15    # Take-profit at 15% above entry
+  max_open_positions: 5    # Maximum simultaneous open positions
+
+# Portfolio
+portfolio:
+  initial_capital: 100000.0  # Starting capital in USD
+
+# Data settings
+data:
+  interval: "1d"             # Bar interval: 1d, 1h, 15m, etc.
+  lookback_days: 365         # Historical data window for indicators
+
+# Logging
+logging:
+  level: INFO
+  file: trading_bot.log
