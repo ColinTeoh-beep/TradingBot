@@ -72,6 +72,12 @@ def determine_market_structure(df: pd.DataFrame) -> str:
     return "ranging"
 
 
+# Number of candles to exclude from the end when determining prior structure
+_BOS_PRIOR_OFFSET = 20
+# Minimum DataFrame length required to evaluate prior structure
+_BOS_MIN_LENGTH = _BOS_PRIOR_OFFSET * 2
+
+
 def detect_bos_choch(df: pd.DataFrame) -> dict:
     """
     Detect the most recent Break of Structure / Change of Character.
@@ -96,13 +102,13 @@ def detect_bos_choch(df: pd.DataFrame) -> dict:
     # Bullish BOS: close breaks above the previous swing high
     if last_close > swing_highs[-2]:
         # If prior structure was bearish → CHoCH, else BOS
-        prior = determine_market_structure(df.iloc[:-20]) if len(df) > 40 else "ranging"
+        prior = determine_market_structure(df.iloc[:-_BOS_PRIOR_OFFSET]) if len(df) > _BOS_MIN_LENGTH else "ranging"
         event = "CHoCH" if prior == "bearish" else "BOS"
         return {"type": event, "direction": "bullish"}
 
     # Bearish BOS: close breaks below the previous swing low
     if last_close < swing_lows[-2]:
-        prior = determine_market_structure(df.iloc[:-20]) if len(df) > 40 else "ranging"
+        prior = determine_market_structure(df.iloc[:-_BOS_PRIOR_OFFSET]) if len(df) > _BOS_MIN_LENGTH else "ranging"
         event = "CHoCH" if prior == "bullish" else "BOS"
         return {"type": event, "direction": "bearish"}
 

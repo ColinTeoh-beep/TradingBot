@@ -62,7 +62,7 @@ def analyse_and_trade(symbol: str):
     if structure in ("bullish", "ranging"):
         # Look for price near a demand zone → buy bias
         for z in sorted(demand_zones, key=lambda z: z["high"], reverse=True):
-            if z["low"] <= current_price <= z["high"] * 1.002:
+            if z["low"] <= current_price <= z["high"] * config.ZONE_PROXIMITY_TOLERANCE:
                 bias = "bullish"
                 chosen_zone = z
                 break
@@ -70,7 +70,7 @@ def analyse_and_trade(symbol: str):
     if bias is None and structure in ("bearish", "ranging"):
         # Look for price near a supply zone → sell bias
         for z in sorted(supply_zones, key=lambda z: z["low"]):
-            if z["low"] * 0.998 <= current_price <= z["high"]:
+            if z["low"] * (2 - config.ZONE_PROXIMITY_TOLERANCE) <= current_price <= z["high"]:
                 bias = "bearish"
                 chosen_zone = z
                 break

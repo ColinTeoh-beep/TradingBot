@@ -48,8 +48,9 @@ def calculate_lot_size(
     per_layer = total_lots / max(num_layers, 1)
 
     # Clamp to broker limits and round down to 0.01
-    per_layer = max(info.volume_min, math.floor(per_layer * 100) / 100)
-    per_layer = min(per_layer, info.volume_max)
+    # Round down to 0.01, then clamp between broker min/max
+    per_layer = math.floor(per_layer * 100) / 100
+    per_layer = max(info.volume_min, min(per_layer, info.volume_max))
 
     logger.info(
         "Risk calc: balance=%.2f  risk%%=%.1f  risk$=%.2f  "

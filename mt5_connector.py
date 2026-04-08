@@ -138,6 +138,13 @@ def send_order(
         logger.error("Invalid order type: %s", order_type)
         return None
 
+    filling_map = {
+        "IOC": mt5.ORDER_FILLING_IOC,
+        "FOK": mt5.ORDER_FILLING_FOK,
+        "RETURN": mt5.ORDER_FILLING_RETURN,
+    }
+    filling_type = filling_map.get(config.ORDER_FILLING_TYPE, mt5.ORDER_FILLING_IOC)
+
     request = {
         "action": mt5.TRADE_ACTION_DEAL,
         "symbol": symbol,
@@ -150,7 +157,7 @@ def send_order(
         "magic": magic,
         "comment": comment,
         "type_time": mt5.ORDER_TIME_GTC,
-        "type_filling": mt5.ORDER_FILLING_IOC,
+        "type_filling": filling_type,
     }
 
     result = mt5.order_send(request)

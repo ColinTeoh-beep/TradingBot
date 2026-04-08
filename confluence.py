@@ -66,7 +66,7 @@ def check_confluences(
     if config.USE_FVG_CONFLUENCE:
         fvgs = ma.detect_fvg(ltf_df)
         # Check if there's a recent FVG aligned with bias (last 10 candles)
-        recent_fvgs = [f for f in fvgs if f["index"] >= len(ltf_df) - 10]
+        recent_fvgs = [f for f in fvgs if f["index"] >= len(ltf_df) - config.FVG_RECENCY_CANDLES]
         matching = [f for f in recent_fvgs if f["type"] == bias]
         if matching:
             reasons.append(f"{bias.title()} FVG detected")
